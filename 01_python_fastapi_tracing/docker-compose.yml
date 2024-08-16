@@ -1,7 +1,7 @@
 services:
     collector:
       image: otel/opentelemetry-collector-contrib:0.107.0
-      command: ["--config=/etc/otel-collector-config.yaml", "--config=/etc/otel-collector-config-extras.yaml"]
+      command: ["--config=/etc/otel-collector-config.yaml", "--config=/etc/otel-collector-config-extras.yaml", "--feature-gates=-component.UseLocalHostAsDefaultHost"]
       environment:
         - HONEYCOMB_APIKEY=${HONEYCOMB_APIKEY}
         - HONEYCOMB_SERVICENAME=${HONEYCOMB_SERVICENAME}

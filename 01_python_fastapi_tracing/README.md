@@ -12,6 +12,7 @@ Demonstrate OTEL fastapi tracing
   - [Testing](#testing)
   - [Configuration](#configuration)
   - [Debugging and Troubleshooting](#debugging-and-troubleshooting)
+    - [Container](#container)
     - [Interpreter](#interpreter)
     - [Pipenv Environment](#pipenv-environment)
     - [Single step](#single-step)
@@ -57,6 +58,7 @@ curl 0.0.0.0:8888/metrics
 just service-run
 
 # terminal 3
+just tests-run-simple
 just tests-run
 
 # from windows browser
@@ -85,6 +87,14 @@ pipenv run -- opentelemetry-instrument --traces_exporter console --metrics_expor
 ```
 
 ## Debugging and Troubleshooting
+
+### Container
+
+```sh
+dive 01_python_fastapi_tracing:latest
+
+docker exec -it 01_python_fastapi_tracing /bin/bash
+```
 
 ### Interpreter
 
@@ -123,3 +133,5 @@ pipenv run python
 - https://opentelemetry.io/docs/languages/python/getting-started/
 - https://coralogix.com/blog/configure-otel-demo-send-telemetry-data-coralogix/
 - https://github.com/open-telemetry/opentelemetry-demo/tree/v1.0.0
+- https://docs.wavefront.com/opentelemetry_python_app_tutorial.html#step-3-configuring-the-opentelemetry-exporter
+- https://opentelemetry-python.readthedocs.io/en/latest/sdk/environment_variables.html#opentelemetry.sdk.environment_variables.OTEL_EXPORTER_OTLP_TRACES_INSECURE

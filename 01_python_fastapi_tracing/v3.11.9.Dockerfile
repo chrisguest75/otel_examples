@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.11.9-slim-bullseye AS build-env
 
+RUN apt-get update \
+    && apt-get install -fy -qq --no-install-recommends ca-certificates curl \
+    && apt-get clean 
+
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -19,14 +23,20 @@ WORKDIR /workbench
 COPY ./Pipfile /workbench/Pipfile
 COPY ./Pipfile.lock /workbench/Pipfile.lock 
 
+
 # RUN PIPENV_VENV_IN_PROJECT=1 pipenv run test
 #RUN set -ex && pipenv install --deploy --system
 RUN pipenv install --deploy --system --dev
+RUN opentelemetry-bootstrap --action=install
 
 ENV TEST_CONFIG="This is a test value from .env"
 COPY <<EOF /workbench/.env
 export TEST_CONFIG="This is a test value from .env"
 export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+export OTEL_EXPORTER_OTLP_ENDPOINT="collector:4317"
+export OTEL_EXPORTER_OTLP_TRACES_INSECURE=true
+export OTEL_EXPORTER_OTLP_METRICS_INSECURE=true
+export OTEL_EXPORTER_OTLP_LOGS_INSECURE=true
 EOF
 
 #CMD ["fastapi", "run", "main.py"]
@@ -36,8 +46,11 @@ COPY --chmod=755 <<EOF /workbench/start.sh
 #!/usr/bin/env bash
 . ./.env
 env
-opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing --log_level TRACE uvicorn main:app --host 0.0.0.0
-#opentelemetry-instrument --traces_exporter oltp --metrics_exporter oltp --service_name 01_python_fastapi_tracing --log_level TRACE uvicorn main:app --host 0.0.0.0
+pip list
+# CONSOLE LOGS
+#opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing --disabled_instrumentations aws-lambda --log_level TRACE uvicorn main:app --host 0.0.0.0
+# OTLP
+opentelemetry-instrument --traces_exporter console,otlp --metrics_exporter otlp --logs_exporter otlp --service_name 01_python_fastapi_tracing --disabled_instrumentations aws-lambda --log_level TRACE uvicorn main:app --host 0.0.0.0
 EOF
 
 COPY ./tests /workbench/tests
