@@ -11,6 +11,7 @@ uvicorn = "*"
 fastapi = {extras = ["standard"], version = "*"}
 opentelemetry-instrumentation-fastapi = "*"
 opentelemetry-distro = "*"
+opentelemetry-exporter-otlp = "*"
 
 [dev-packages]
 flake8 = "*"

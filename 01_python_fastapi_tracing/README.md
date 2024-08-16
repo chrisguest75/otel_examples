@@ -8,7 +8,7 @@ Demonstrate OTEL fastapi tracing
   - [Contents](#contents)
   - [Prepare](#prepare)
   - [Start](#start)
-  - [Docker](#docker)
+  - [Just](#just)
   - [Testing](#testing)
   - [Configuration](#configuration)
   - [Debugging and Troubleshooting](#debugging-and-troubleshooting)
@@ -45,12 +45,19 @@ cp .env.template .env
 pipenv run start:fastapi
 ```
 
-## Docker
+## Just
 
 ```sh
-pipenv run build:docker
-pipenv run start:docker
+# terminal 1
+just collector-restart 
 
+# terminal 2
+just service-run
+
+# terminal 3
+just tests-run
+
+# from windows browser
 open http://127.0.0.1:8000/
 open http://127.0.0.1:8000/docs
 ```
@@ -58,7 +65,7 @@ open http://127.0.0.1:8000/docs
 ## Testing
 
 ```sh
-ENDPOINT=http://127.0.0.1:8000
+ENDPOINT=http://0.0.0.0:8000
 curl -vvv --parallel --parallel-immediate --parallel-max 10  ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200
 ```
 
@@ -112,3 +119,5 @@ pipenv run python
 - OpenTelemetry FastAPI Instrumentation [here](https://opentelemetry-python-contrib.readthedocs.io/en/latest/instrumentation/fastapi/fastapi.html)  
 - https://opentelemetry.io/docs/languages/python/
 - https://opentelemetry.io/docs/languages/python/getting-started/
+- https://coralogix.com/blog/configure-otel-demo-send-telemetry-data-coralogix/
+- https://github.com/open-telemetry/opentelemetry-demo/tree/v1.0.0
