@@ -1,5 +1,15 @@
-import { logger } from './logger.js'
+import { configureCollector, shutdownOtel } from './tracing.js'
 import * as dotenv from 'dotenv'
+
+dotenv.config()
+/*const apikey = process.env.HONEYCOMB_APIKEY ?? ''
+const dataset = process.env.HONEYCOMB_DATASET ?? ''
+const servicename = process.env.HONEYCOMB_SERVICENAME ?? ''
+configureHoneycomb(apikey, dataset, servicename)*/
+const servicename = process.env.OTEL_SERVICENAME || 'UNKNOWN_SERVICE'
+configureCollector(servicename)
+
+import { logger } from './logger.js'
 import minimist from 'minimist'
 import express from 'express'
 import pino from 'express-pino-logger'
@@ -57,6 +67,7 @@ export async function main(args: minimist.ParsedArgs) {
 function shutDown(signal: string) {
   return new Promise(() => {
     logger.info(`shutDown - ${signal}`)
+    shutdownOtel()
     process.exit(0)
   })
 }
