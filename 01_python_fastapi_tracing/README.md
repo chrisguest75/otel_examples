@@ -8,6 +8,8 @@ Demonstrate OTEL fastapi tracing
   - [Contents](#contents)
   - [Prepare](#prepare)
   - [Start](#start)
+  - [Docker](#docker)
+  - [Testing](#testing)
   - [Configuration](#configuration)
   - [Debugging and Troubleshooting](#debugging-and-troubleshooting)
     - [Interpreter](#interpreter)
@@ -43,19 +45,34 @@ cp .env.template .env
 pipenv run start:fastapi
 ```
 
+## Docker
+
+```sh
+pipenv run build:docker
+pipenv run start:docker
+
+open http://127.0.0.1:8000/
+open http://127.0.0.1:8000/docs
+```
+
+## Testing
+
+```sh
+ENDPOINT=http://127.0.0.1:8000
+curl -vvv --parallel --parallel-immediate --parallel-max 10  ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200
+```
+
 ## Configuration
 
 ```sh
 pipenv  install opentelemetry-distro
 pipenv run -- opentelemetry-bootstrap -a install
 
-export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
-pipenv run -- opentelemetry-instrument \
-    --traces_exporter console \
-    --metrics_exporter console \
-    --logs_exporter console \
-    --service_name 01_python_fastapi_tracing \
-    fastapi dev main.py
+
+pipenv run -- opentelemetry-instrument --help
+pipenv run -- opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing --disabled_instrumentations aws-lambda --log_level TRACE fastapi dev main.py
+
+pipenv run -- opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing --log_level TRACE fastapi dev main.py
 ```
 
 ## Debugging and Troubleshooting

@@ -24,6 +24,9 @@ python_version = "3.11"
 
 [scripts]
 "start:fastapi" = "fastapi dev main.py"
+"start:fastapi:tracing:console" = "opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing fastapi dev main.py"
 test = "pytest"
 lint = "flake8"
 format = "black ."
+"build:docker" = "docker buildx build --load -f v3.11.9.Dockerfile -t 01_python_fastapi_tracing:latest ."
+"start:docker" = "docker run --rm -it -p 8000:8000 01_python_fastapi_tracing:latest"
