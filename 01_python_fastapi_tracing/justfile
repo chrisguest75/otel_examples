@@ -28,6 +28,16 @@ tests-run:
   ENDPOINT=http://0.0.0.0:8000
   curl -vvv --parallel --parallel-immediate --parallel-max 10  ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/sleep/12 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200 ${ENDPOINT}/status/200
 
+tests-run-simple:
+  #!/usr/bin/env bash
+  set -eufo pipefail
+
+  echo "*************************************"
+  echo "** TESTS-RUN-SIMPLE"
+  echo "*************************************"
+  ENDPOINT=http://0.0.0.0:8000
+  curl -vvv ${ENDPOINT}/status/200 
+
 collector-run:
   #!/usr/bin/env bash
   set -eufo pipefail

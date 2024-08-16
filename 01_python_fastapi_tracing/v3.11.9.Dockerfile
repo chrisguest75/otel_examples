@@ -35,6 +35,7 @@ EOF
 COPY --chmod=755 <<EOF /workbench/start.sh
 #!/usr/bin/env bash
 . ./.env
+env
 opentelemetry-instrument --traces_exporter console --metrics_exporter console --logs_exporter console --service_name 01_python_fastapi_tracing --log_level TRACE uvicorn main:app --host 0.0.0.0
 #opentelemetry-instrument --traces_exporter oltp --metrics_exporter oltp --service_name 01_python_fastapi_tracing --log_level TRACE uvicorn main:app --host 0.0.0.0
 EOF

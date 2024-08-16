@@ -50,6 +50,8 @@ pipenv run start:fastapi
 ```sh
 # terminal 1
 just collector-restart 
+# you can check collector metrics here.
+curl 0.0.0.0:8888/metrics
 
 # terminal 2
 just service-run
